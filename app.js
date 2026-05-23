@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // app.js — 할 일 관리 앱: Supabase 연동 버전
 
 // ---------- Supabase 클라이언트 ----------
@@ -10,24 +9,12 @@ const db = supabase.createClient(
 
 // ---------- 상수 & 상태 ----------
 
-=======
-// app.js — 할 일 관리 앱: 데이터 / 렌더링 / 이벤트 / 초기화
-
-// ---------- 상수 & 상태 ----------
-
-const STORAGE_KEY = "todos";
-
->>>>>>> 07dfb8c37629091c5f27a8e856d31ef4a604360a
 const CATEGORY_LABELS = {
     work: "업무",
     personal: "개인",
     study: "공부",
 };
 
-<<<<<<< HEAD
-=======
-// 자동 분류용 키워드 — 텍스트에 포함된 키워드 수가 가장 많은 카테고리로 분류한다.
->>>>>>> 07dfb8c37629091c5f27a8e856d31ef4a604360a
 const CATEGORY_KEYWORDS = {
     work: [
         "회의", "미팅", "보고서", "보고", "이메일", "메일", "발표", "프로젝트",
@@ -87,7 +74,6 @@ function resolveCategory(selectValue, text) {
     return selectValue === "auto" ? classifyByKeywords(text) : selectValue;
 }
 
-<<<<<<< HEAD
 // ---------- 데이터 계층 (Supabase) ----------
 
 async function loadTodos() {
@@ -103,37 +89,11 @@ async function loadTodos() {
 }
 
 async function addTodo(text, category) {
-=======
-// ---------- 데이터 계층 ----------
-
-function loadTodos() {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return [];
-    try {
-        const parsed = JSON.parse(raw);
-        return Array.isArray(parsed) ? parsed : [];
-    } catch {
-        return [];
-    }
-}
-
-function saveTodos(todos) {
-    try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
-    } catch (e) {
-        console.error("할 일 저장 실패 (localStorage 용량 초과 등):", e);
-    }
-}
-
-function addTodo(text, category) {
-    const todos = loadTodos();
->>>>>>> 07dfb8c37629091c5f27a8e856d31ef4a604360a
     const todo = {
         id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
         text,
         category,
         completed: false,
-<<<<<<< HEAD
         created_at: new Date().toISOString(),
     };
     const { data, error } = await db.from("todo").insert(todo).select().single();
@@ -184,49 +144,12 @@ async function toggleTodo(id) {
         return null;
     }
     return data;
-=======
-        createdAt: new Date().toISOString(),
-    };
-    todos.push(todo);
-    saveTodos(todos);
-    return todo;
-}
-
-function updateTodo(id, newText, newCategory) {
-    const todos = loadTodos();
-    const todo = todos.find((t) => t.id === id);
-    if (!todo) return null;
-    todo.text = newText;
-    todo.category = newCategory;
-    saveTodos(todos);
-    return todo;
-}
-
-function deleteTodo(id) {
-    const todos = loadTodos();
-    const next = todos.filter((t) => t.id !== id);
-    saveTodos(next);
-}
-
-function toggleTodo(id) {
-    const todos = loadTodos();
-    const todo = todos.find((t) => t.id === id);
-    if (!todo) return null;
-    todo.completed = !todo.completed;
-    saveTodos(todos);
-    return todo;
->>>>>>> 07dfb8c37629091c5f27a8e856d31ef4a604360a
 }
 
 // ---------- 렌더링 ----------
 
-<<<<<<< HEAD
 async function renderTodos() {
     const all = await loadTodos();
-=======
-function renderTodos() {
-    const all = loadTodos();
->>>>>>> 07dfb8c37629091c5f27a8e856d31ef4a604360a
     const visible = currentFilter === "all"
         ? all
         : all.filter((t) => t.category === currentFilter);
@@ -292,25 +215,16 @@ function updateProgress(all) {
     progressTextEl.textContent = `${done} / ${total} 완료 (${percent}%)`;
 }
 
-<<<<<<< HEAD
 async function setFilter(filter) {
-=======
-function setFilter(filter) {
->>>>>>> 07dfb8c37629091c5f27a8e856d31ef4a604360a
     currentFilter = filter;
     for (const btn of filterButtonEls) {
         btn.classList.toggle("active", btn.dataset.filter === filter);
     }
-<<<<<<< HEAD
     await renderTodos();
-=======
-    renderTodos();
->>>>>>> 07dfb8c37629091c5f27a8e856d31ef4a604360a
 }
 
 // ---------- 이벤트 핸들러 ----------
 
-<<<<<<< HEAD
 async function handleAdd() {
     const text = todoInputEl.value.trim();
     if (!text) return;
@@ -319,16 +233,6 @@ async function handleAdd() {
     todoInputEl.value = "";
     updateAutoHint();
     await renderTodos();
-=======
-function handleAdd() {
-    const text = todoInputEl.value.trim();
-    if (!text) return;
-    const category = resolveCategory(categorySelectEl.value, text);
-    addTodo(text, category);
-    todoInputEl.value = "";
-    updateAutoHint();
-    renderTodos();
->>>>>>> 07dfb8c37629091c5f27a8e856d31ef4a604360a
 }
 
 function updateAutoHint() {
@@ -378,11 +282,7 @@ function startEdit(li, todo) {
     cancelBtn.type = "button";
     cancelBtn.textContent = "취소";
 
-<<<<<<< HEAD
     const commit = async () => {
-=======
-    const commit = () => {
->>>>>>> 07dfb8c37629091c5f27a8e856d31ef4a604360a
         const newText = input.value.trim();
         if (!newText) {
             input.classList.add("error");
@@ -390,13 +290,8 @@ function startEdit(li, todo) {
             return;
         }
         const newCategory = resolveCategory(select.value, newText);
-<<<<<<< HEAD
         await updateTodo(todo.id, newText, newCategory);
         await renderTodos();
-=======
-        updateTodo(todo.id, newText, newCategory);
-        renderTodos();
->>>>>>> 07dfb8c37629091c5f27a8e856d31ef4a604360a
     };
 
     const cancel = () => renderTodos();
@@ -425,7 +320,6 @@ document.addEventListener("DOMContentLoaded", () => {
     filterButtonEls = document.querySelectorAll(".filter-button");
     autoHintEl = document.getElementById("auto-hint");
 
-<<<<<<< HEAD
     todoListEl.addEventListener("change", async (e) => {
         if (!e.target.classList.contains("todo-checkbox")) return;
         const li = e.target.closest("li[data-id]");
@@ -444,26 +338,6 @@ document.addEventListener("DOMContentLoaded", () => {
         } else if (e.target.classList.contains("delete-button")) {
             await deleteTodo(li.dataset.id);
             await renderTodos();
-=======
-    todoListEl.addEventListener("change", (e) => {
-        if (!e.target.classList.contains("todo-checkbox")) return;
-        const li = e.target.closest("li[data-id]");
-        if (!li) return;
-        toggleTodo(li.dataset.id);
-        renderTodos();
-    });
-
-    todoListEl.addEventListener("click", (e) => {
-        const li = e.target.closest("li[data-id]");
-        if (!li) return;
-        if (e.target.classList.contains("edit-button")) {
-            const todos = loadTodos();
-            const todo = todos.find((t) => t.id === li.dataset.id);
-            if (todo) startEdit(li, todo);
-        } else if (e.target.classList.contains("delete-button")) {
-            deleteTodo(li.dataset.id);
-            renderTodos();
->>>>>>> 07dfb8c37629091c5f27a8e856d31ef4a604360a
         }
     });
 
@@ -485,8 +359,4 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     setFilter(currentFilter);
-<<<<<<< HEAD
 });
-=======
-});
->>>>>>> 07dfb8c37629091c5f27a8e856d31ef4a604360a
